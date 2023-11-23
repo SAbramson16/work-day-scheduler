@@ -1,3 +1,6 @@
+// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
+// the code isn't run until the browser has finished rendering all the elements
+// in the html.
 let savedItem = []
 let timeBlock = document.querySelectorAll(".time-block");
 let dayDisplayEl = $('#currentDay');
@@ -5,16 +8,22 @@ let currentHour = dayjs().hour();
 
 $(function () {
 
+  displayDay();
+
   function loadItems() {
-    let savedItem = JSON.parse(localStorage.getItem("savedItem"));
+    savedItem = JSON.parse(localStorage.getItem("savedItem"));
+    if (savedItem == null) {
+      savedItem = []; 
+    }
     savedItem.forEach(function (task) {
-      $('#' + task.hour + ' .description').val(task.text)
+      $('#' + task.hour + ' .description').val(task.text);
     })
   }
   
   loadItems();
-  displayDay();
   
+  
+
   function displayDay() {
     let currentDay = dayjs().format('dddd MMM DD, YYYY hh:mm a');
     // console.log(currentDay);
@@ -32,6 +41,7 @@ $(function () {
           $(this).addClass('future');
         }
       })
+      
     }
 
     changeColor();
@@ -54,4 +64,6 @@ $(function () {
     localStorage.setItem("savedItem", JSON.stringify(savedItem));
   })
 
+  
 });
+
