@@ -1,6 +1,3 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 let savedItem = []
 let timeBlock = document.querySelectorAll(".time-block");
 let dayDisplayEl = $('#currentDay');
@@ -10,6 +7,7 @@ $(function () {
 
   displayDay();
 
+  //if there are no items saved in local storage, it's not able to retrieve data - add null conditional statement
   function loadItems() {
     savedItem = JSON.parse(localStorage.getItem("savedItem"));
     if (savedItem == null) {
@@ -22,14 +20,13 @@ $(function () {
   
   loadItems();
   
-  
-
   function displayDay() {
     let currentDay = dayjs().format('dddd MMM DD, YYYY hh:mm a');
     // console.log(currentDay);
     dayDisplayEl.text(currentDay);
   }
 
+  //targets a specific time block based on current hour
     function changeColor() {
       $('.time-block').each(function() {
         let timeBlock = parseInt(this.id);
@@ -45,8 +42,8 @@ $(function () {
     }
 
     changeColor();
-    console.log("change color");
-  
+    
+  //adds event listener to button and call upon siblings and decendents
   $('.saveBtn').on('click', function() {
     let saveBtn = $(this);
     let textInput = saveBtn.siblings('.description').val();
@@ -58,12 +55,10 @@ $(function () {
       text: textInput,
       hour: time,
     }
-    console.log(task);
-    let savedItem = JSON.parse(localStorage.getItem("savedItem")) || [];
+  
+    savedItem = JSON.parse(localStorage.getItem("savedItem")) || [];
     savedItem.push(task);
     localStorage.setItem("savedItem", JSON.stringify(savedItem));
   })
-
-  
 });
 
